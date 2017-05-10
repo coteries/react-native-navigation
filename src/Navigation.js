@@ -17,9 +17,45 @@ function registerScreen(screenID, generator) {
 function registerComponent(screenID, generator, store = undefined, Provider = undefined, options = {}) {
   if (store && Provider) {
     return _registerComponentRedux(screenID, generator, store, Provider, options);
+  } else if (!store && Provider) {
+    return _registerComponentApollo(screenID, generator, Provider, options);
   } else {
     return _registerComponentNoRedux(screenID, generator);
   }
+}
+
+function _registerComponentApollo(screenID, generator, Provider, options) {
+    const generatorWrapper = function() {
+    const InternalComponent = generator();
+    return class extends Screen {
+      static navigatorStyle = InternalComponent.navigatorStyle || {};
+      static navigatorButtons = InternalComponent.navigatorButtons || {};
+
+      constructor(props) {
+        super(props);
+        this.state = {
+          internalProps: {...props, ...PropRegistry.load(props.screenInstanceID)}
+        }
+      }
+
+      componentWillReceiveProps(nextProps) {
+        this.setState({
+          internalProps: {...PropRegistry.load(this.props.screenInstanceID), ...nextProps}
+        })
+      }
+
+      render() {
+        const { client } = options;
+        return (
+          <Provider {...options}>
+            <InternalComponent testID={screenID} navigator={this.navigator} {...this.state.internalProps} />
+          </Provider>
+        );
+      }
+    };
+  };
+  registerScreen(screenID, generatorWrapper);
+  return generatorWrapper;
 }
 
 function _registerComponentNoRedux(screenID, generator) {
