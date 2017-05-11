@@ -45,7 +45,6 @@ function _registerComponentApollo(screenID, generator, Provider, options) {
       }
 
       render() {
-        const { client } = options;
         return (
           <Provider {...options}>
             <InternalComponent testID={screenID} navigator={this.navigator} {...this.state.internalProps} />
