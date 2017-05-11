@@ -79,6 +79,7 @@ function startTabBasedApp(params) {
                     title={tab.title}
                     subtitle={tab.subtitle}
                     titleImage={tab.titleImage}
+                    titleButtons={tab.titleButtons}
                     component={tab.screen}
                     passProps={{
                     navigatorID: tab.navigationParams.navigatorID,
@@ -88,6 +89,7 @@ function startTabBasedApp(params) {
                     style={tab.navigationParams.navigatorStyle}
                     leftButtons={tab.navigationParams.navigatorButtons.leftButtons}
                     rightButtons={tab.navigationParams.navigatorButtons.rightButtons}
+                    titleButtons={tab.navigationParams.navigatorButtons.titleButtons}
                   />
                 </TabBarControllerIOS.Item>
               );
@@ -170,6 +172,7 @@ function startSingleScreenApp(params) {
           style={navigatorStyle}
           leftButtons={navigatorButtons.leftButtons}
           rightButtons={navigatorButtons.rightButtons}
+          titleButtons={navigatorButtons.titleButtons}
           appStyle={params.appStyle}
         />
       );
@@ -205,6 +208,11 @@ function _mergeScreenSpecificSettings(screenID, screenInstanceID, params) {
   if (navigatorButtons.rightButtons) {
     for (let i = 0; i < navigatorButtons.rightButtons.length; i++) {
       navigatorButtons.rightButtons[i].onPress = navigatorEventID;
+    }
+  }
+  if (navigatorButtons.titleButtons) {
+    for (let i = 0; i < navigatorButtons.titleButtons.length; i++) {
+      navigatorButtons.titleButtons[i].onPress = navigatorEventID;
     }
   }
   return {navigatorStyle, navigatorButtons, navigatorEventID};
@@ -247,7 +255,8 @@ function navigatorPush(navigator, params) {
     backButtonTitle: params.backButtonTitle,
     backButtonHidden: params.backButtonHidden,
     leftButtons: navigatorButtons.leftButtons,
-    rightButtons: navigatorButtons.rightButtons
+    rightButtons: navigatorButtons.rightButtons,
+    titleButtons: navigatorButtons.titleButtons
   });
 }
 
@@ -298,7 +307,8 @@ function navigatorResetTo(navigator, params) {
     passProps: passProps,
     style: navigatorStyle,
     leftButtons: navigatorButtons.leftButtons,
-    rightButtons: navigatorButtons.rightButtons
+    rightButtons: navigatorButtons.rightButtons,
+    titleButtons: navigatorButtons.titleButtons
   });
 }
 
@@ -430,6 +440,13 @@ function navigatorSetButtons(navigator, navigatorEventID, params) {
     }
     Controllers.NavigationControllerIOS(navigator.navigatorID).setRightButtons(buttons, params.animated);
   }
+  if (params.titleButtons) {
+    const buttons = params.titleButtons.slice(); // clone
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].onPress = navigatorEventID;
+    }
+    Controllers.NavigationControllerIOS(navigator.navigatorID).setTitleButtons(buttons, params.animated);
+  }
 }
 
 function showModal(params) {
@@ -470,7 +487,8 @@ function showModal(params) {
           passProps={passProps}
           style={navigatorStyle}
           leftButtons={navigatorButtons.leftButtons}
-          rightButtons={navigatorButtons.rightButtons}/>
+          rightButtons={navigatorButtons.rightButtons}
+          titleButtons={navigatorButtons.titleButtons}/>
       );
     }
   });
@@ -554,7 +572,7 @@ function showInAppNotification(params) {
     navigatorEventID,
     navigatorID
   };
-  
+
   savePassProps(params);
 
   let args = {

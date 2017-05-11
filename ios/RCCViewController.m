@@ -266,8 +266,10 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
   if (self.navigationItem.titleView && [self.navigationItem.titleView isKindOfClass:[RCCTitleView class]]) {
     
     RCCTitleView *titleView = (RCCTitleView *)self.navigationItem.titleView;
+		if (titleView.titleLabel) {
     RCCTitleViewHelper *helper = [[RCCTitleViewHelper alloc] init:viewController navigationController:viewController.navigationController title:titleView.titleLabel.text subtitle:titleView.subtitleLabel.text titleImageData:nil isSetSubtitle:NO];
     [helper setup:self.navigatorStyle];
+		}
   }
   
   NSMutableDictionary *navButtonTextAttributes = [RCTHelpers textAttributesFromDictionary:self.navigatorStyle withPrefix:@"navBarButton"];

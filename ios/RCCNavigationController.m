@@ -46,7 +46,12 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
   {
     [self setButtons:rightButtons viewController:viewController side:@"right" animated:NO];
   }
-  
+	NSArray *titleButtons = props[@"titleButtons"];
+	if (titleButtons)
+	{
+		[self setButtons:titleButtons viewController:viewController side:@"center" animated:NO];
+	}
+
   self = [super initWithRootViewController:viewController];
   if (!self) return nil;
   self.delegate = self;
@@ -266,6 +271,58 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
 
 -(void)setButtons:(NSArray*)buttons viewController:(UIViewController*)viewController side:(NSString*)side animated:(BOOL)animated
 {
+	if ([side isEqualToString:@"center"])
+	{
+		int BUTTON_DIM = 44;
+		RCCTitleView *titleView = [[RCCTitleView alloc] initWithFrame: CGRectMake(0, 0, buttons.count * BUTTON_DIM, BUTTON_DIM)];
+		titleView.backgroundColor = [UIColor clearColor];
+
+		int i = 0;
+		for (NSDictionary *button in buttons)
+		{
+			UIImage *iconImage = nil;
+			id icon = button[@"icon"];
+			if (icon) iconImage = [RCTConvert UIImage:icon];
+
+			UIButton *titleButton = [[UIButton alloc] initWithFrame: CGRectMake(i * BUTTON_DIM, 0, BUTTON_DIM, BUTTON_DIM)];
+			if (iconImage) {
+				[titleButton setImage: iconImage forState: UIControlStateNormal];
+			}
+
+			UIImage *selectedIconImage = nil;
+			id selectedIcon = button[@"selectedIcon"];
+			if (selectedIcon) selectedIconImage = [RCTConvert UIImage:icon];
+			if (selectedIconImage) {
+				[titleButton setImage: selectedIconImage forState: UIControlStateHighlighted];
+			}
+
+			[titleButton addTarget:self action: @selector(onButtonPress:) forControlEvents:UIControlEventTouchUpInside];
+			objc_setAssociatedObject(titleButton, &CALLBACK_ASSOCIATED_KEY, button[@"onPress"], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+			NSString *buttonId = button[@"id"];
+			if (buttonId)
+			{
+				objc_setAssociatedObject(titleButton, &CALLBACK_ASSOCIATED_ID, buttonId, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+			}
+
+
+			[titleView insertSubview:titleButton atIndex:i];
+			NSString *testID = button[@"testID"];
+			if (testID)
+			{
+				titleButton.accessibilityIdentifier = testID;
+			}
+
+			i++;
+		}
+
+		titleView.contentMode = UIViewContentModeCenter;
+		[viewController.navigationItem setTitleView: titleView];
+
+		NSLog(@"[side isEqualToString:center]");
+		return;
+	}
+
   NSMutableArray *barButtonItems = [NSMutableArray new];
   for (NSDictionary *button in buttons)
   {
