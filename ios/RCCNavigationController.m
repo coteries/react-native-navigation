@@ -390,6 +390,10 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
                   props:(NSDictionary*)props
                   style:(NSDictionary*)style
 {
+  if (props[@"titleButtons"]) {
+		return;
+	}
+
   BOOL isSetSubtitleBool = props[@"isSetSubtitle"] ? [props[@"isSetSubtitle"] boolValue] : NO;
   RCCTitleViewHelper *titleViewHelper = [[RCCTitleViewHelper alloc] init:viewController
                                                     navigationController:self
