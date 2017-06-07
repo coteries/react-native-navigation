@@ -12,6 +12,7 @@
 {
   BOOL _transitioning;
   NSMutableArray *_queuedViewControllers;
+	NSMutableArray *titleButtonsRefs; // hacky way to deselect title buttons
 }
 
 NSString const *CALLBACK_ASSOCIATED_KEY = @"RCCNavigationController.CALLBACK_ASSOCIATED_KEY";
@@ -49,6 +50,7 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
 	NSArray *titleButtons = props[@"titleButtons"];
 	if (titleButtons)
 	{
+		titleButtonsRefs = [NSMutableArray new];
 		[self setButtons:titleButtons viewController:viewController side:@"center" animated:NO];
 	}
 
@@ -269,6 +271,25 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
    }];
 }
 
+-(void)onButtonTitlePress:(UIButton*)button
+{
+
+	for (UIButton *b in titleButtonsRefs) {
+		[b setSelected:NO];
+	}
+	[button setSelected:YES];
+
+	NSString *callbackId = objc_getAssociatedObject(button, &CALLBACK_ASSOCIATED_KEY);
+	if (!callbackId) return;
+	NSString *buttonId = objc_getAssociatedObject(button, &CALLBACK_ASSOCIATED_ID);
+	[[[RCCManager sharedInstance] getBridge].eventDispatcher sendAppEventWithName:callbackId body:@
+	 {
+		 @"type": @"NavBarButtonPress",
+		 @"id": buttonId ? buttonId : [NSNull null]
+	 }];
+}
+
+
 -(void)setButtons:(NSArray*)buttons viewController:(UIViewController*)viewController side:(NSString*)side animated:(BOOL)animated
 {
 	if ([side isEqualToString:@"center"])
@@ -278,8 +299,7 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
 		titleView.backgroundColor = [UIColor clearColor];
 
 		int i = 0;
-		for (NSDictionary *button in buttons)
-		{
+		for (NSDictionary *button in buttons) {
 			UIImage *iconImage = nil;
 			id icon = button[@"icon"];
 			if (icon) iconImage = [RCTConvert UIImage:icon];
@@ -289,14 +309,17 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
 				[titleButton setImage: iconImage forState: UIControlStateNormal];
 			}
 
+			// preselect menu
+			if (i == 0) titleButton.selected = YES;
+
 			UIImage *selectedIconImage = nil;
 			id selectedIcon = button[@"selectedIcon"];
-			if (selectedIcon) selectedIconImage = [RCTConvert UIImage:icon];
+			if (selectedIcon) selectedIconImage = [RCTConvert UIImage:selectedIcon];
 			if (selectedIconImage) {
-				[titleButton setImage: selectedIconImage forState: UIControlStateHighlighted];
+				[titleButton setImage: selectedIconImage forState: UIControlStateSelected];
 			}
 
-			[titleButton addTarget:self action: @selector(onButtonPress:) forControlEvents:UIControlEventTouchUpInside];
+			[titleButton addTarget:self action: @selector(onButtonTitlePress:) forControlEvents:UIControlEventTouchDown];
 			objc_setAssociatedObject(titleButton, &CALLBACK_ASSOCIATED_KEY, button[@"onPress"], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
 			NSString *buttonId = button[@"id"];
@@ -313,6 +336,7 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
 				titleButton.accessibilityIdentifier = testID;
 			}
 
+			[titleButtonsRefs addObject:titleButton];
 			i++;
 		}
 
