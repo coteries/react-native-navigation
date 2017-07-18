@@ -7,6 +7,7 @@
 #import "RCCTitleViewHelper.h"
 #import "UIViewController+Rotation.h"
 #import "RCTHelpers.h"
+#import "CustomNavigationBar.h"
 
 @implementation RCCNavigationController
 {
@@ -54,8 +55,10 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
 		[self setButtons:titleButtons viewController:viewController side:@"center" animated:NO];
 	}
 
-  self = [super initWithRootViewController:viewController];
-  if (!self) return nil;
+	self = [super initWithNavigationBarClass: [CustomNavigationBar class] toolbarClass:nil];
+	self.viewControllers = @[viewController];
+
+	if (!self) return nil;
   self.delegate = self;
   
   self.navigationBar.translucent = NO; // default
