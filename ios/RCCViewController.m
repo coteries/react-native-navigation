@@ -67,18 +67,11 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
   {
     controller = [[RCCNavigationController alloc] initWithProps:props children:children globalProps:globalProps bridge:bridge];
 
-		UINavigationBar *navigationBar = ((UINavigationController *) controller).navigationBar;
+		UINavigationController *navigationController = (UINavigationController *) controller;
 
-		[navigationBar setBackgroundImage: [UIImage new] forBarMetrics:UIBarMetricsDefault];
-		[navigationBar setShadowImage: [UIImage new]];
-		[navigationBar setTranslucent: YES];
-//		UINavigationController *navigationController = (UINavigationController *) controller;
-//		navigationController.navigationBar.layer.shadowColor = [[UIColor lightGrayColor] CGColor];
-//		navigationController.navigationBar.layer.shadowOffset = CGSizeMake(0.0f, 10.0f);
-//		navigationController.navigationBar.layer.shadowRadius = 10.0f;
-//		navigationController.navigationBar.layer.shadowOpacity = 1.0f;
-//		navigationController.navigationBar.layer.masksToBounds = NO;
-
+		[navigationController.navigationBar setBackgroundImage: [UIImage new] forBarMetrics:UIBarMetricsDefault];
+		[navigationController.navigationBar setShadowImage: [UIImage new]];
+		[navigationController.navigationBar setTranslucent: YES];
   }
   
   // tab bar controller
@@ -87,12 +80,6 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     controller = [[RCCTabBarController alloc] initWithProps:props children:children globalProps:globalProps bridge:bridge];
 
 		UITabBarController *tabBarController = (UITabBarController *) controller;
-//		tabBarController.tabBar.backgroundColor = [UIColor whiteColor];
-//		tabBarController.tabBar.layer.shadowColor = [[UIColor lightGrayColor] CGColor];
-//		tabBarController.tabBar.layer.shadowOffset = CGSizeMake(0.0f, -10.0f);
-//		tabBarController.tabBar.layer.shadowRadius = 10.0f;
-//		tabBarController.tabBar.layer.shadowOpacity = 1.0f;
-//		tabBarController.tabBar.layer.masksToBounds = NO;
 		[tabBarController.tabBar setBackgroundImage: [UIImage new]];
 		[tabBarController.tabBar setShadowImage: [UIImage new]];
 		[tabBarController.tabBar setTranslucent: YES];
