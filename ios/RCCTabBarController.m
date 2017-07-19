@@ -79,6 +79,35 @@
   return YES;
 }
 
+- (void)tabButtonWasPressed:(UIButton *)button {
+	NSUInteger index = button.tag;
+	id viewController = [self.viewControllers objectAtIndex: index];
+//	[self setSelectedIndex: index];
+
+	[self tabBarController:self shouldSelectViewController:viewController];
+	[self setSelectedViewController: viewController];
+
+}
+
+- (UIButton *)createButtonTab:(NSString *)title {
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+	[button setTitle:title forState:UIControlStateNormal];
+	[button setTitleColor:self.lightGrey forState:UIControlStateNormal];
+	[button.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Medium" size:16.0]];
+	[button sizeToFit];
+	[button addTarget:self action:@selector(tabButtonWasPressed:) forControlEvents:UIControlEventTouchDown];
+
+	return button;
+}
+
+- (UIColor *)lightGrey {
+	return [UIColor colorWithRed:124.0/255 green:124.0/255 blue:124.0/255 alpha:1];
+}
+
+- (UIColor *)darkGrey {
+	return [UIColor colorWithRed:74.0/255 green:74.0/255 blue:74.0/255 alpha:1];
+}
+
 - (UIImage *)image:(UIImage*)image withColor:(UIColor *)color1
 {
   UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
