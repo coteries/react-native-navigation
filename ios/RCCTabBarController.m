@@ -14,6 +14,10 @@
 
 @end
 
+@interface RCCTabBarController()
+- (void)selectedTabButton:(UIButton *)sender;
+@end
+
 @implementation RCCTabBarController
 
 
@@ -22,12 +26,43 @@
 }
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
+
   id queue = [[RCCManager sharedInstance].getBridge uiManager].methodQueue;
   dispatch_async(queue, ^{
     [[[RCCManager sharedInstance].getBridge uiManager] configureNextLayoutAnimation:nil withCallback:^(NSArray* arr){} errorCallback:^(NSArray* arr){}];
   });
   
   if (tabBarController.selectedIndex != [tabBarController.viewControllers indexOfObject:viewController]) {
+
+//		 Change custom tabbar UI
+		UIImageView *imageView = [self.tabBar viewWithTag:16];
+		UIButton *button1 = [imageView viewWithTag:0];
+		UIButton *button2 = [imageView viewWithTag:1];
+		UIButton *button3 = [imageView viewWithTag:2];
+
+		NSUInteger index = [self.viewControllers indexOfObject:viewController];
+		NSString *imageName = @"";
+	
+		if (index == 0) {
+			imageName = @"bgTabbarLeft";
+			[button1 setTitleColor:self.darkGrey forState:UIControlStateNormal];
+			[button2 setTitleColor:self.lightGrey forState:UIControlStateNormal];
+			[button3 setTitleColor:self.lightGrey forState:UIControlStateNormal];
+		} else 	if (index == 1) {
+			imageName = @"bgTabbarCenter";
+			[button1 setTitleColor:self.lightGrey forState:UIControlStateNormal];
+			[button2 setTitleColor:self.darkGrey forState:UIControlStateNormal];
+			[button3 setTitleColor:self.lightGrey forState:UIControlStateNormal];
+		} else 	if (index == 2) {
+			imageName = @"bgTabbarRight";
+			[button1 setTitleColor:self.lightGrey forState:UIControlStateNormal];
+			[button2 setTitleColor:self.lightGrey forState:UIControlStateNormal];
+			[button3 setTitleColor:self.darkGrey forState:UIControlStateNormal];
+		}
+	
+		imageView.image = [UIImage imageNamed: imageName];
+
+
     NSDictionary *body = @{
                            @"selectedTabIndex": @([tabBarController.viewControllers indexOfObject:viewController]),
                            @"unselectedTabIndex": @(tabBarController.selectedIndex)
@@ -209,13 +244,47 @@
   self.viewControllers = viewControllers;
   
   // set selected tab index
-  NSUInteger *selectedIndex = [props[@"selectedIndex"] unsignedIntegerValue];
+  NSUInteger selectedIndex = [props[@"selectedIndex"] unsignedIntegerValue];
   if (selectedIndex && selectedIndex < viewControllers.count) {
     [self setSelectedIndex:selectedIndex];
   }
   
   [self setRotation:props];
-  
+
+	// CUSTOME TABBAR
+	CGRect screen = [[UIScreen mainScreen] bounds];
+	int imageHeight = 86;
+	float screenWidth = screen.size.width;
+
+	UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, screenWidth, imageHeight)];
+	[imageView setUserInteractionEnabled:YES];
+	imageView.tag = 16;
+	imageView.image = [UIImage imageNamed:@"bgTabbarCenter"];
+
+	// 49 is the tabbar height since ios 8
+	CGRect frame = CGRectMake(0, -(imageHeight-49), screenWidth, imageHeight);
+	UIView *tabbarView = [[UIView alloc] initWithFrame: frame];
+	tabbarView.backgroundColor = UIColor.clearColor;
+
+	UIButton *button = [self createButtonTab:@"FAVORITEN"];
+	button.tag = 0;
+	button.center = CGPointMake(screenWidth/3-(screenWidth/3)/2, 60);
+
+	UIButton *button2 = [self createButtonTab:@"ANGEBOTE"];
+	button2.tag = 1;
+	[button2 setTitleColor:self.darkGrey forState:UIControlStateNormal];
+	button2.center = CGPointMake((screenWidth/3)*2-(screenWidth/3)/2, 60);
+
+	UIButton *button3 = [self createButtonTab:@"PREMIUM"];
+	button3.tag = 2;
+	button3.center = CGPointMake(screenWidth-(screenWidth/3)/2, 60);
+
+	[imageView addSubview:button];
+	[imageView addSubview:button2];
+	[imageView addSubview:button3];
+	[tabbarView addSubview:imageView];
+	[self.tabBar addSubview:tabbarView];
+
   return self;
 }
 

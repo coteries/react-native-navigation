@@ -87,12 +87,15 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     controller = [[RCCTabBarController alloc] initWithProps:props children:children globalProps:globalProps bridge:bridge];
 
 		UITabBarController *tabBarController = (UITabBarController *) controller;
-		tabBarController.tabBar.backgroundColor = [UIColor whiteColor];
-		tabBarController.tabBar.layer.shadowColor = [[UIColor lightGrayColor] CGColor];
-		tabBarController.tabBar.layer.shadowOffset = CGSizeMake(0.0f, -10.0f);
-		tabBarController.tabBar.layer.shadowRadius = 10.0f;
-		tabBarController.tabBar.layer.shadowOpacity = 1.0f;
-		tabBarController.tabBar.layer.masksToBounds = NO;
+//		tabBarController.tabBar.backgroundColor = [UIColor whiteColor];
+//		tabBarController.tabBar.layer.shadowColor = [[UIColor lightGrayColor] CGColor];
+//		tabBarController.tabBar.layer.shadowOffset = CGSizeMake(0.0f, -10.0f);
+//		tabBarController.tabBar.layer.shadowRadius = 10.0f;
+//		tabBarController.tabBar.layer.shadowOpacity = 1.0f;
+//		tabBarController.tabBar.layer.masksToBounds = NO;
+		[tabBarController.tabBar setBackgroundImage: [UIImage new]];
+		[tabBarController.tabBar setShadowImage: [UIImage new]];
+		[tabBarController.tabBar setTranslucent: YES];
   }
   
   // side menu controller
@@ -149,7 +152,8 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
   [mergedProps addEntriesFromDictionary:passProps];
   
   RCTRootView *reactView = [[RCTRootView alloc] initWithBridge:bridge moduleName:component initialProperties:mergedProps];
-  if (!reactView) return nil;
+
+	if (!reactView) return nil;
   
   self = [super init];
   if (!self) return nil;
