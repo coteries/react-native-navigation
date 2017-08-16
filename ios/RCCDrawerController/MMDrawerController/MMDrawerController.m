@@ -753,7 +753,7 @@ static NSString *MMDrawerOpenSideKey = @"MMDrawerOpenSide";
     
     [self.view setBackgroundColor:[UIColor blackColor]];
     
-    [self setupGestureRecognizers];
+//    [self setupGestureRecognizers];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
