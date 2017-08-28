@@ -70,6 +70,17 @@
     [RCCTabBarController sendScreenTabChangedEvent:viewController body:body];
     
     [[[RCCManager sharedInstance] getBridge].eventDispatcher sendAppEventWithName:@"bottomTabSelected" body:body];
+    if ([viewController isKindOfClass:[UINavigationController class]]) {
+      UINavigationController *navigationController = (UINavigationController*)viewController;
+      UIViewController *topViewController = navigationController.topViewController;
+      
+      if ([topViewController isKindOfClass:[RCCViewController class]]) {
+        RCCViewController *topRCCViewController = (RCCViewController*)topViewController;
+        topRCCViewController.commandType = COMMAND_TYPE_BOTTOME_TAB_SELECTED;
+        topRCCViewController.timestamp = [RCTHelpers getTimestampString];
+      }
+    }
+    
   } else {
     [RCCTabBarController sendScreenTabPressedEvent:viewController body:nil];
   }
@@ -271,6 +282,13 @@
   
   // replace the tabs
   self.viewControllers = viewControllers;
+
+  NSNumber *initialTab = tabsStyle[@"initialTabIndex"];
+  if (initialTab)
+  {
+    NSInteger initialTabIndex = initialTab.integerValue;
+    [self setSelectedIndex:initialTabIndex];
+  }
   
   // set selected tab index
   NSUInteger selectedIndex = [props[@"selectedIndex"] unsignedIntegerValue];

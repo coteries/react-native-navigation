@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import Navigation from './../Navigation';
-import Controllers, {Modal, Notification} from './controllers';
+import Controllers, {Modal, Notification, ScreenUtils} from './controllers';
 const React = Controllers.hijackReact();
 const {
   ControllerRegistry,
@@ -69,7 +69,8 @@ function startTabBasedApp(params) {
           id={controllerID + '_tabs'}
           style={params.tabsStyle}
           appStyle={params.appStyle}
-          selectedIndex={params.selectedIndex}>
+          selectedIndex={params.selectedIndex}
+          initialTabIndex={params.initialTabIndex}>
           {
             params.tabs.map(function(tab, index) {
               return (
@@ -84,7 +85,7 @@ function startTabBasedApp(params) {
                     passProps={{
                     navigatorID: tab.navigationParams.navigatorID,
                     screenInstanceID: tab.navigationParams.screenInstanceID,
-                    navigatorEventID: tab.navigationParams.navigatorEventID
+                    navigatorEventID: tab.navigationParams.navigatorEventID,
                   }}
                     style={tab.navigationParams.navigatorStyle}
                     leftButtons={tab.navigationParams.navigatorButtons.leftButtons}
@@ -100,6 +101,7 @@ function startTabBasedApp(params) {
     }
   });
   savePassProps(params);
+  _.set(params, 'passProps.timestamp', Date.now());
 
   ControllerRegistry.registerController(controllerID, () => Controller);
   ControllerRegistry.setRootController(controllerID, params.animationType, params.passProps || {});
@@ -250,25 +252,30 @@ function navigatorPush(navigator, params) {
     titleImage: params.titleImage,
     component: params.screen,
     animated: params.animated,
+    animationType: params.animationType,
     passProps: passProps,
     style: navigatorStyle,
     backButtonTitle: params.backButtonTitle,
     backButtonHidden: params.backButtonHidden,
     leftButtons: navigatorButtons.leftButtons,
     rightButtons: navigatorButtons.rightButtons,
-    titleButtons: navigatorButtons.titleButtons
+    titleButtons: navigatorButtons.titleButtons,
+    timestamp: Date.now()
   });
 }
 
 function navigatorPop(navigator, params) {
   Controllers.NavigationControllerIOS(navigator.navigatorID).pop({
-    animated: params.animated
+    animated: params.animated,
+    animationType: params.animationType,
+    timestamp: Date.now()
   });
 }
 
 function navigatorPopToRoot(navigator, params) {
   Controllers.NavigationControllerIOS(navigator.navigatorID).popToRoot({
-    animated: params.animated
+    animated: params.animated,
+    animationType: params.animationType
   });
 }
 
@@ -304,12 +311,18 @@ function navigatorResetTo(navigator, params) {
     titleImage: params.titleImage,
     component: params.screen,
     animated: params.animated,
+    animationType: params.animationType,
     passProps: passProps,
     style: navigatorStyle,
     leftButtons: navigatorButtons.leftButtons,
     rightButtons: navigatorButtons.rightButtons,
     titleButtons: navigatorButtons.titleButtons
   });
+}
+
+function navigatorSetDrawerEnabled(navigator, params) {
+    const controllerID = navigator.navigatorID.split('_')[0];
+    Controllers.NavigationControllerIOS(controllerID + '_drawer').setDrawerEnabled(params)
 }
 
 function navigatorSetTitle(navigator, params) {
@@ -466,6 +479,7 @@ function showModal(params) {
   passProps.navigatorID = navigatorID;
   passProps.screenInstanceID = screenInstanceID;
   passProps.navigatorEventID = navigatorEventID;
+  passProps.timestamp = Date.now();
 
   params.navigationParams = {
     screenInstanceID,
@@ -626,6 +640,10 @@ function dismissContextualMenu() {
   // Android only
 }
 
+async function getCurrentlyVisibleScreenId() {
+  return await ScreenUtils.getCurrentlyVisibleScreenId();
+}
+
 export default {
   startTabBasedApp,
   startSingleScreenApp,
@@ -641,6 +659,7 @@ export default {
   showInAppNotification,
   dismissInAppNotification,
   navigatorSetButtons,
+  navigatorSetDrawerEnabled,
   navigatorSetTitle,
   navigatorSetSubtitle,
   navigatorSetStyle,
@@ -652,5 +671,6 @@ export default {
   navigatorSwitchToTab,
   navigatorToggleNavBar,
   showContextualMenu,
-  dismissContextualMenu
+  dismissContextualMenu,
+  getCurrentlyVisibleScreenId
 };
