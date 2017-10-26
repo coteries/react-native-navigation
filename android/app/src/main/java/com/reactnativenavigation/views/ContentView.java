@@ -40,7 +40,9 @@ public class ContentView extends ReactRootView {
     public void setViewMeasurer(ViewMeasurer viewMeasurer) {
         this.viewMeasurer = viewMeasurer;
     }
-
+    public String getScreenId() {
+        return this.screenId;
+    }
     private void attachToJS() {
         navigationParams.toBundle().putAll(initialProps);
         startReactApplication(NavigationApplication.instance.getReactGateway().getReactInstanceManager(),

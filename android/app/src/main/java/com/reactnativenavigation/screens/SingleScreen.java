@@ -29,9 +29,9 @@ public class SingleScreen extends Screen {
 
     protected LayoutParams createLayoutParams() {
         LayoutParams params = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
-        if (screenParams.styleParams.drawScreenBelowTopBar) {
-            params.addRule(BELOW, topBar.getId());
-        }
+//        if (screenParams.styleParams.drawScreenBelowTopBar) {
+//            params.addRule(BELOW, topBar.getId());
+//        }
         return params;
     }
 

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.facebook.react.bridge.Callback;
+import com.reactnativenavigation.R;
 import com.reactnativenavigation.animation.VisibilityAnimator;
 import com.reactnativenavigation.params.BaseScreenParams;
 import com.reactnativenavigation.params.ContextualMenuParams;
@@ -42,6 +43,9 @@ public class TopBar extends AppBarLayout {
         setId(ViewUtils.generateViewId());
         createTopBarVisibilityAnimator();
         createLayout();
+        //setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        // setBackground(getResources().getDrawable(R.drawable.bg_navbar));
+
     }
 
     private void createTopBarVisibilityAnimator() {
@@ -161,9 +165,14 @@ public class TopBar extends AppBarLayout {
         } else if (styleParams.topBarColor.hasColor()) {
             setBackgroundColor(styleParams.topBarColor.getColor());
         }
-        if (styleParams.topBarTransparent) {
-            setTransparent();
+//        if (styleParams.topBarTransparent) {
+//            setTransparent();
+//        }
+        setTransparent();
+        if (!styleParams.titleBarHidden) {
+            setBackgroundResource(R.drawable.bg_navbar);
         }
+
         titleBar.setStyle(styleParams);
         setReactView(styleParams);
         setTopTabsStyle(styleParams);

@@ -22,6 +22,7 @@ import com.reactnativenavigation.params.TitleBarButtonParams;
 import com.reactnativenavigation.params.TitleBarLeftButtonParams;
 import com.reactnativenavigation.utils.ViewUtils;
 
+
 import java.util.List;
 
 public class TitleBar extends Toolbar {

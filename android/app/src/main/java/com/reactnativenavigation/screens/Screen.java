@@ -2,7 +2,9 @@ package com.reactnativenavigation.screens;
 
 import android.annotation.TargetApi;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import android.widget.RelativeLayout;
 
 import com.facebook.react.bridge.Callback;
 import com.reactnativenavigation.NavigationApplication;
+import com.reactnativenavigation.R;
 import com.reactnativenavigation.controllers.NavigationActivity;
 import com.reactnativenavigation.events.ContextualMenuHiddenEvent;
 import com.reactnativenavigation.events.Event;
