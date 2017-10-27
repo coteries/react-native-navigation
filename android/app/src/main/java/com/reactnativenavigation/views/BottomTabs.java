@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.reactnativenavigation.R;
 import com.reactnativenavigation.animation.VisibilityAnimator;
 import com.reactnativenavigation.params.AppStyle;
 import com.reactnativenavigation.params.ScreenParams;
@@ -36,6 +37,10 @@ public class BottomTabs extends AHBottomNavigation {
             setOnTabSelectedListener(onTabSelectedListener);
         }
         setTitlesDisplayState();
+    }
+
+    public void setListener(OnTabSelectedListener onTabSelectedListener) {
+        setOnTabSelectedListener(onTabSelectedListener);
     }
 
     public void setStyleFromScreen(StyleParams params) {

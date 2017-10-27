@@ -6,7 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -14,6 +17,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableMap;
 import com.reactnativenavigation.NavigationApplication;
+import com.reactnativenavigation.R;
 import com.reactnativenavigation.events.EventBus;
 import com.reactnativenavigation.events.ScreenChangedEvent;
 import com.reactnativenavigation.params.ActivityParams;
@@ -51,6 +55,7 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
     private ActivityParams params;
     private SnackbarAndFabContainer snackbarAndFabContainer;
     private BottomTabs bottomTabs;
+    private LinearLayout imagesTab;
     private ScreenStack[] screenStacks;
     private final SideMenuParams leftSideMenuParams;
     private final SideMenuParams rightSideMenuParams;
@@ -68,6 +73,31 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
         rightSideMenuParams = params.rightSideMenuParams;
         screenStacks = new ScreenStack[params.tabParams.size()];
         createLayout();
+
+        Button tabFav = (Button) findViewById(R.id.tab_fav);
+        Button tabCampaigns = (Button) findViewById(R.id.tab_campaigns);
+        Button tabPremium = (Button) findViewById(R.id.tab_premium);
+
+        tabFav.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                imagesTab.setBackgroundResource(R.drawable.bg_tabbar_left);
+                bottomTabs.setCurrentItem(0);
+            }
+        });
+
+        tabCampaigns.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                imagesTab.setBackgroundResource(R.drawable.bg_tabbar_center);
+                bottomTabs.setCurrentItem(1);
+            }
+        });
+
+        tabPremium.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                imagesTab.setBackgroundResource(R.drawable.bg_tabbar_right);
+                bottomTabs.setCurrentItem(2);
+            }
+        });
     }
 
     private void createLayout() {
@@ -122,12 +152,17 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
     private void createBottomTabs() {
         bottomTabs = new BottomTabs(getContext());
         bottomTabs.addTabs(params.tabParams, this);
+
+        if (imagesTab == null) {
+            LayoutInflater inflater =  (LayoutInflater) getContext().getSystemService(getContext().LAYOUT_INFLATER_SERVICE);
+            imagesTab = (LinearLayout) inflater.inflate(R.layout.tab_center, null);
+        }
     }
 
     private void addBottomTabs() {
         LayoutParams lp = new LayoutParams(MATCH_PARENT, WRAP_CONTENT);
         lp.addRule(ALIGN_PARENT_BOTTOM);
-        getScreenStackParent().addView(bottomTabs, lp);
+        getScreenStackParent().addView(imagesTab, lp);
     }
 
     private void createSnackbarContainer() {
