@@ -1,6 +1,7 @@
 package com.reactnativenavigation.layouts;
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -77,6 +78,11 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
         Button tabFav = (Button) findViewById(R.id.tab_fav);
         Button tabCampaigns = (Button) findViewById(R.id.tab_campaigns);
         Button tabPremium = (Button) findViewById(R.id.tab_premium);
+
+        Typeface typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Medium.ttf");
+        tabFav.setTypeface(typeface);
+        tabCampaigns.setTypeface(typeface);
+        tabPremium.setTypeface(typeface);
 
         tabFav.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

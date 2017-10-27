@@ -1,37 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tab_bar"
     android:layout_width="match_parent"
     android:layout_height="44dp"
-    android:id="@+id/tab_bar"
     android:background="@drawable/bg_tabbar_center"
     android:gravity="center_vertical|center_horizontal">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:gravity="bottom|center"
         android:id="@+id/tab_fav"
-        android:text="FAVORITEN" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:layout_marginTop="10dp"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
         android:gravity="bottom|center"
+        android:text="FAVORITEN"
+        android:textSize="16sp" />
+
+    <Button
         android:id="@+id/tab_campaigns"
-        android:text="CAMPAIGNS" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:layout_marginTop="10dp"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
         android:gravity="bottom|center"
+        android:text="CAMPAIGNS"
+        android:textSize="16sp" />
+
+    <Button
         android:id="@+id/tab_premium"
-        android:text="PREMIUM" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:gravity="bottom|center"
+        android:text="PREMIUM"
+        android:textSize="16sp" />
 
 </LinearLayout>
