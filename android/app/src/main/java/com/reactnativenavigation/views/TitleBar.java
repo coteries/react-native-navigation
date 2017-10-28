@@ -142,7 +142,9 @@ public class TitleBar extends Toolbar {
         }
         View titleView = getTitleView();
         if (titleView instanceof TextView) {
+            Typeface typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Medium.ttf");
             ((TextView) titleView).setTypeface(params.titleBarTitleFont.get());
+            ((TextView) titleView).setTypeface(typeface);
         }
     }
 
