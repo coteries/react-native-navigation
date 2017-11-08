@@ -38,20 +38,20 @@ public class TitleBarButtonParamsParser extends Parser {
     }
 
     BaseTitleBarButtonParams.ShowAsAction parseShowAsAction(String showAsAction) {
-        if (showAsAction == null) {
-            return BaseTitleBarButtonParams.ShowAsAction.IfRoom;
-        }
+        //if (showAsAction == null) {
+        //    return BaseTitleBarButtonParams.ShowAsAction.IfRoom;
+        //}
 
-        switch (showAsAction) {
-            case "always":
+        //switch (showAsAction) {
+        //    case "always":
                 return BaseTitleBarButtonParams.ShowAsAction.Always;
-            case "never":
-                return BaseTitleBarButtonParams.ShowAsAction.Never;
-            case "withText":
-                return BaseTitleBarButtonParams.ShowAsAction.WithText;
-            case "ifRoom":
-            default:
-                return BaseTitleBarButtonParams.ShowAsAction.IfRoom;
-        }
+        //    case "never":
+        //        return BaseTitleBarButtonParams.ShowAsAction.Never;
+        //    case "withText":
+        //        return BaseTitleBarButtonParams.ShowAsAction.WithText;
+        //    case "ifRoom":
+        //    default:
+        //        return BaseTitleBarButtonParams.ShowAsAction.IfRoom;
+        //}
     }
 }
